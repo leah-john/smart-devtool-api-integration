@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from backend.app.crawler.crawler import crawl_documentation
+from backend.app.rag.text_processor import clean_text, create_chunks
 app = FastAPI(
     title="Smart DevTool API Integration",
     version="1.0.0"
@@ -20,4 +21,20 @@ def crawl():
 
     return {
         "content": content
+    }
+
+@app.get("/chunks")
+def chunks():
+
+    url = "https://developer.paypal.com/docs/api"
+
+    content = crawl_documentation(url)
+
+    cleaned_text = clean_text(content)
+
+    chunks = create_chunks(cleaned_text)
+
+    return {
+        "total_chunks": len(chunks),
+        "first_chunk": chunks[0]
     }
