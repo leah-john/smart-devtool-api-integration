@@ -3,6 +3,7 @@ from backend.app.crawler.crawler import crawl_documentation
 from backend.app.rag.text_processor import clean_text, create_chunks
 from backend.app.rag.vector_store import store_chunks
 from backend.app.rag.retriever import retrieve_relevant_chunks
+from backend.app.services.llm_service import generate_answer
 app = FastAPI(
     title="Smart DevTool API Integration",
     version="1.0.0"
@@ -53,4 +54,22 @@ def search():
     return {
         "query": query,
         "results": results
+    }
+@app.get("/ask")
+def ask():
+
+    question = "How do I authenticate with PayPal?"
+
+    retrieved_chunks = retrieve_relevant_chunks(question)
+
+    context = "\n".join(retrieved_chunks)
+
+    answer = generate_answer(
+        question,
+        context
+    )
+
+    return {
+        "question": question,
+        "answer": answer
     }
