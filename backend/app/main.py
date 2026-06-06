@@ -6,6 +6,7 @@ from backend.app.rag.retriever import retrieve_relevant_chunks
 from backend.app.services.llm_service import generate_answer
 from backend.app.models.request_models import URLRequest
 from backend.app.services.endpoint_extractor import extract_endpoints
+from backend.app.services.auth_detector import detect_authentication
 
 app = FastAPI(
     title="Smart DevTool API Integration",
@@ -84,7 +85,8 @@ def analyze_documentation(request: URLRequest):
     cleaned_text = clean_text(raw_text)
 
     endpoints = extract_endpoints(cleaned_text)
-    print(cleaned_text[:3000])
+    
+    auth_type = detect_authentication(cleaned_text)
 
     chunks = create_chunks(cleaned_text)
 
@@ -94,5 +96,6 @@ def analyze_documentation(request: URLRequest):
         "message": "Documentation analyzed successfully",
         "total_chunks": len(chunks),
         "total_endpoints": len(endpoints),
+        "authentication": auth_type,
         "endpoints": endpoints
-    }   
+    }
