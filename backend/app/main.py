@@ -4,9 +4,10 @@ from backend.app.rag.text_processor import clean_text, create_chunks
 from backend.app.rag.vector_store import store_chunks
 from backend.app.rag.retriever import retrieve_relevant_chunks
 from backend.app.services.llm_service import generate_answer
-from backend.app.models.request_models import URLRequest
+from backend.app.models.request_models import AnalyzeRequest
 from backend.app.services.endpoint_extractor import extract_endpoints
 from backend.app.services.auth_detector import detect_authentication
+from backend.app.services.recommendation_engine import generate_recommendations
 
 app = FastAPI(
     title="Smart DevTool API Integration",
@@ -78,7 +79,7 @@ def ask():
         "answer": answer
     }
 @app.post("/analyze")
-def analyze_documentation(request: URLRequest):
+def analyze_documentation(request: AnalyzeRequest):
 
     raw_text = crawl_documentation(request.url)
 
@@ -91,11 +92,18 @@ def analyze_documentation(request: URLRequest):
     chunks = create_chunks(cleaned_text)
 
     store_chunks(chunks)
+    
+    recommendations = generate_recommendations(
+    auth_type,
+    endpoints,
+    request.use_case
+)
 
     return {
         "message": "Documentation analyzed successfully",
         "total_chunks": len(chunks),
         "total_endpoints": len(endpoints),
         "authentication": auth_type,
-        "endpoints": endpoints
+        "endpoints": endpoints,
+        "recommendations": recommendations
     }

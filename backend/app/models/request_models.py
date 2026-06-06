@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
 
-class URLRequest(BaseModel):
+class AnalyzeRequest(BaseModel):
     url: str
+    use_case: str
