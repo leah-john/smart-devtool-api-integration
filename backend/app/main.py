@@ -5,6 +5,7 @@ from backend.app.rag.vector_store import store_chunks
 from backend.app.rag.retriever import retrieve_relevant_chunks
 from backend.app.services.llm_service import generate_answer
 from backend.app.models.request_models import URLRequest
+from backend.app.services.endpoint_extractor import extract_endpoints
 
 app = FastAPI(
     title="Smart DevTool API Integration",
@@ -82,11 +83,16 @@ def analyze_documentation(request: URLRequest):
 
     cleaned_text = clean_text(raw_text)
 
+    endpoints = extract_endpoints(cleaned_text)
+    print(cleaned_text[:3000])
+
     chunks = create_chunks(cleaned_text)
 
     store_chunks(chunks)
 
     return {
         "message": "Documentation analyzed successfully",
-        "total_chunks": len(chunks)
-    }
+        "total_chunks": len(chunks),
+        "total_endpoints": len(endpoints),
+        "endpoints": endpoints
+    }   
