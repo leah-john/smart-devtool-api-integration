@@ -8,6 +8,7 @@ from backend.app.models.request_models import AnalyzeRequest
 from backend.app.services.endpoint_extractor import extract_endpoints
 from backend.app.services.auth_detector import detect_authentication
 from backend.app.services.recommendation_engine import generate_recommendations
+from backend.app.services.provider_detector import detect_provider
 
 app = FastAPI(
     title="Smart DevTool API Integration",
@@ -88,6 +89,8 @@ def analyze_documentation(request: AnalyzeRequest):
     endpoints = extract_endpoints(cleaned_text)
     
     auth_type = detect_authentication(cleaned_text)
+    
+    provider = detect_provider(cleaned_text)
 
     chunks = create_chunks(cleaned_text)
 
@@ -103,6 +106,7 @@ def analyze_documentation(request: AnalyzeRequest):
         "message": "Documentation analyzed successfully",
         "total_chunks": len(chunks),
         "total_endpoints": len(endpoints),
+        "provider": provider,
         "authentication": auth_type,
         "endpoints": endpoints,
         "recommendations": recommendations
