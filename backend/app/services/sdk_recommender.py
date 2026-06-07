@@ -1,35 +1,38 @@
-from backend.app.services.llm_service import generate_answer
+def recommend_sdk(provider):
 
+    sdk_map = {
 
-def generate_recommendations(
-    authentication,
-    endpoints,
-    use_case
-):
+        "PayPal": [
+            "PayPal Python SDK",
+            "PayPal Java SDK",
+            "PayPal Node.js SDK"
+        ],
 
-    prompt = f"""
-    Authentication Method:
-    {authentication}
+        "Stripe": [
+            "Stripe Python SDK",
+            "Stripe Java SDK",
+            "Stripe Node.js SDK"
+        ],
 
-    Available Endpoints:
-    {endpoints}
+        "Twilio": [
+            "Twilio Python SDK",
+            "Twilio Java SDK",
+            "Twilio Node.js SDK"
+        ],
 
-    Intended Use Case:
-    {use_case}
+        "Razorpay": [
+            "Razorpay Python SDK",
+            "Razorpay Java SDK",
+            "Razorpay Node.js SDK"
+        ],
 
-    Based on the above information:
+        "PhonePe": [
+            "PhonePe Python SDK",
+            "PhonePe Java SDK"
+        ]
+    }
 
-    1. Recommend suitable SDKs
-    2. Suggest REST API alternatives
-    3. Provide integration steps
-    4. Mention best practices
-
-    Keep the response concise and developer friendly.
-    """
-
-    recommendations = generate_answer(
-        prompt,
-        ""
+    return sdk_map.get(
+        provider,
+        ["No SDK recommendations available"]
     )
-
-    return recommendations

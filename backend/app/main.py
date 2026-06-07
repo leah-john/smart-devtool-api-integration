@@ -9,6 +9,7 @@ from backend.app.services.endpoint_extractor import extract_endpoints
 from backend.app.services.auth_detector import detect_authentication
 from backend.app.services.recommendation_engine import generate_recommendations
 from backend.app.services.provider_detector import detect_provider
+from backend.app.services.sdk_recommender import recommend_sdk
 
 app = FastAPI(
     title="Smart DevTool API Integration",
@@ -92,6 +93,8 @@ def analyze_documentation(request: AnalyzeRequest):
     
     provider = detect_provider(cleaned_text)
 
+    recommended_sdks = recommend_sdk(provider)
+
     chunks = create_chunks(cleaned_text)
 
     store_chunks(chunks)
@@ -109,5 +112,6 @@ def analyze_documentation(request: AnalyzeRequest):
         "provider": provider,
         "authentication": auth_type,
         "endpoints": endpoints,
-        "recommendations": recommendations
+        "recommendations": recommendations,
+        "recommended_sdks": recommended_sdks,
     }
