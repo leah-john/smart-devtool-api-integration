@@ -133,14 +133,13 @@ def analyze_documentation(request: AnalyzeRequest):
 
     return {
         "message": "Documentation analyzed successfully",
-        "total_chunks": len(chunks),
-        "total_endpoints": len(endpoints),
         "provider": provider,
         "authentication": auth_type,
         "endpoints": endpoints,
-        "recommendations": recommendations,
         "recommended_sdks": recommended_sdks,
-        "wrapper_code": wrapper_code,
+        "recommendations": recommendations,
+        "wrapper_file": f"{provider.lower()}_wrapper.py",
+        "download_url": f"/download-wrapper/{provider.lower()}"
     }
 @app.get("/download-wrapper/{provider}")
 def download_wrapper(provider: str):
