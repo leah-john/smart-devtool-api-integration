@@ -89,28 +89,44 @@ def analyze_documentation(request: AnalyzeRequest):
     cleaned_text = clean_text(raw_text)
 
     endpoints = extract_endpoints(cleaned_text)
-    
+
     auth_type = detect_authentication(cleaned_text)
-    
+
     provider = detect_provider(cleaned_text)
 
     recommended_sdks = recommend_sdk(provider)
 
-    wrapper_code = generate_wrapper(
-    provider,
-    auth_type,
-    endpoints
-    )
+    filename = f"backend/generated_wrappers/{provider.lower()}_wrapper.py"
 
+    wrapper_code = "Wrapper generation unavailable."
+
+    try:
+        wrapper_code = generate_wrapper(
+            provider,
+            auth_type,
+            endpoints
+        )
+    except Exception:
+        pass
+
+    with open(filename, "w", encoding="utf-8") as file:
+        file.write(wrapper_code)
+
+    recommendations = "Recommendations unavailable."
+
+    try:
+        recommendations = generate_recommendations(
+            auth_type,
+            endpoints,
+            request.use_case
+        )
+    except Exception:
+        pass
+
+    # RAG Storage
     chunks = create_chunks(cleaned_text)
 
     store_chunks(chunks)
-    
-    recommendations = generate_recommendations(
-    auth_type,
-    endpoints,
-    request.use_case
-)
 
     return {
         "message": "Documentation analyzed successfully",

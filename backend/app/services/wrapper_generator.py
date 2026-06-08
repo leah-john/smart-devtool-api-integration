@@ -30,5 +30,14 @@ def generate_wrapper(
         prompt,
         ""
     )
+    wrapper_code = wrapper_code.replace(
+    "```python",
+    ""
+)
+
+    wrapper_code = wrapper_code.replace(
+        "```",
+        ""
+    )
 
     return wrapper_code
