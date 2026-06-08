@@ -20,4 +20,4 @@ build/
 *.log
 
 # ChromaDB
-chroma_db/
+backend/app/rag/chroma_db/
