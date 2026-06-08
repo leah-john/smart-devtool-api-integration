@@ -1,52 +1,68 @@
 
 class PayPalOAuthClient:
     """
-    A Python wrapper for handling PayPal's OAuth 2.0 authentication.
+    A Python wrapper class for interacting with PayPal's OAuth 2.0 authentication.
 
-    This client focuses on generating access tokens using the provided
-    sandbox environment endpoint.
+    This class is designed to facilitate obtaining access tokens from PayPal's
+    sandbox environment using the OAuth 2.0 client credentials flow.
     """
+
+    # The base URL for PayPal's OAuth 2.0 token endpoint as per documentation.
+    # This specifically points to the sandbox environment.
+    _TOKEN_ENDPOINT = "https://api-m.sandbox.paypal.com/v1/oauth2/token"
 
     def __init__(self, client_id: str, client_secret: str):
         """
-        Initializes the PayPal OAuth client.
+        Initializes the PayPalOAuthClient with your application's client credentials.
+
+        These credentials are essential for authenticating your application when
+        requesting an access token from PayPal.
 
         Args:
-            client_id (str): Your PayPal application's client ID.
-            client_secret (str): Your PayPal application's client secret.
+            client_id (str): Your PayPal application's unique Client ID.
+            client_secret (str): Your PayPal application's secret key.
         """
-        self._sandbox_base_url = "https://api-m.sandbox.paypal.com"
-        self._token_endpoint = f"{self._sandbox_base_url}/v1/oauth2/token"
-        self._client_id = client_id
-        self._client_secret = client_secret
+        self.client_id = client_id
+        self.client_secret = client_secret
+        # In a complete implementation, you might store the obtained access token here
+        # and manage its expiration and refreshing logic.
+        self._access_token = None # Placeholder for a potential access token
 
-    def get_access_token(self):
+    def get_access_token(self) -> dict:
         """
-        Requests an OAuth 2.0 access token from the PayPal sandbox environment.
+        Requests an OAuth 2.0 access token from the PayPal token endpoint.
 
-        This method would typically send a POST request to the token endpoint
-        using the client credentials (client_id and client_secret)
-        to authenticate and receive a new access token.
+        This method will typically make a POST request to the specified endpoint:
+        "https://api-m.sandbox.paypal.com/v1/oauth2/token"
+
+        It uses your `client_id` and `client_secret` for basic authentication
+        and typically sends `grant_type=client_credentials` in the request body
+        to obtain an application-level access token.
 
         Returns:
-            dict: A dictionary containing the access token and its details
-                  upon successful authentication (in a full implementation).
-                  This is currently a method stub.
+            dict: A dictionary containing the access token and other related details
+                  if the request is successful.
+                  Example structure of a successful response:
+                  {
+                      "scope": "...",
+                      "access_token": "YOUR_ACCESS_TOKEN_HERE",
+                      "token_type": "Bearer",
+                      "app_id": "...",
+                      "expires_in": 28800, # e.g., in seconds
+                      "nonce": "..."
+                  }
+                  If an error occurs, it would typically return an error response
+                  with details about the failure.
         """
-        # Method stub:
-        # In a real implementation, you would use an HTTP client library
-        # (e.g., 'requests') to make a POST call to self._token_endpoint.
-        # The request would typically include:
-        # - Basic Authentication header using client_id and client_secret.
-        # - Content-Type: application/x-www-form-urlencoded header.
-        # - Body parameters like grant_type='client_credentials'.
-        #
-        # Example (not implemented here as per requirements):
-        # import requests
-        # auth_header = (self._client_id, self._client_secret)
-        # data = {'grant_type': 'client_credentials'}
-        # headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-        # response = requests.post(self._token_endpoint, auth=auth_header, data=data, headers=headers)
-        # response.raise_for_status() # Raise an exception for HTTP errors
-        # return response.json()
-        pass
+        # This is a method stub.
+        # To make this functional, you would implement the logic to:
+        # 1. Use an HTTP client library (e.g., 'requests' in Python).
+        # 2. Construct the POST request to self._TOKEN_ENDPOINT.
+        #    - Headers: Typically include 'Content-Type': 'application/x-www-form-urlencoded'.
+        #    - Body: 'grant_type=client_credentials'.
+        #    - Authentication: Use Basic Auth with self.client_id and self.client_secret.
+        # 3. Send the request.
+        # 4. Handle the response, checking for HTTP status codes and parsing the JSON content.
+        # 5. Return the parsed dictionary.
+
+        pass # The 'pass' keyword indicates an empty block, serving as a method stub.

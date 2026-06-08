@@ -11,6 +11,9 @@ from backend.app.services.recommendation_engine import generate_recommendations
 from backend.app.services.provider_detector import detect_provider
 from backend.app.services.sdk_recommender import recommend_sdk
 from backend.app.services.wrapper_generator import generate_wrapper
+from fastapi.responses import FileResponse
+
+
 
 app = FastAPI(
     title="Smart DevTool API Integration",
@@ -139,3 +142,16 @@ def analyze_documentation(request: AnalyzeRequest):
         "recommended_sdks": recommended_sdks,
         "wrapper_code": wrapper_code,
     }
+@app.get("/download-wrapper/{provider}")
+def download_wrapper(provider: str):
+
+    filename = (
+        f"backend/generated_wrappers/"
+        f"{provider.lower()}_wrapper.py"
+    )
+
+    return FileResponse(
+        path=filename,
+        filename=f"{provider.lower()}_wrapper.py",
+        media_type="text/plain"
+    )
