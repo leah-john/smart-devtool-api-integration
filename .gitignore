@@ -21,3 +21,6 @@ build/
 
 # ChromaDB
 backend/app/rag/chroma_db/
+
+# Generated wrappers
+backend/generated_wrappers/*.py

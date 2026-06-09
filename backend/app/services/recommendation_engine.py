@@ -1,4 +1,4 @@
-from backend.app.services.llm_service import generate_answer
+from app.services.llm_service import generate_answer
 
 
 def generate_recommendations(

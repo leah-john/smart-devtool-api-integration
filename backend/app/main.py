@@ -1,23 +1,35 @@
+import os
 from fastapi import FastAPI
-from backend.app.crawler.crawler import crawl_documentation
-from backend.app.rag.text_processor import clean_text, create_chunks
-from backend.app.rag.vector_store import store_chunks
-from backend.app.rag.retriever import retrieve_relevant_chunks
-from backend.app.services.llm_service import generate_answer
-from backend.app.models.request_models import AnalyzeRequest
-from backend.app.services.endpoint_extractor import extract_endpoints
-from backend.app.services.auth_detector import detect_authentication
-from backend.app.services.recommendation_engine import generate_recommendations
-from backend.app.services.provider_detector import detect_provider
-from backend.app.services.sdk_recommender import recommend_sdk
-from backend.app.services.wrapper_generator import generate_wrapper
+from app.crawler.crawler import crawl_documentation
+from app.rag.text_processor import clean_text, create_chunks
+from app.rag.vector_store import store_chunks
+from app.rag.retriever import retrieve_relevant_chunks
+from app.services.llm_service import generate_answer
+from app.models.request_models import AnalyzeRequest
+from app.services.endpoint_extractor import extract_endpoints
+from app.services.auth_detector import detect_authentication
+from app.services.recommendation_engine import generate_recommendations
+from app.services.provider_detector import detect_provider
+from app.services.sdk_recommender import recommend_sdk
+from app.services.wrapper_generator import generate_wrapper
 from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 
 
 app = FastAPI(
     title="Smart DevTool API Integration",
     version="1.0.0"
+)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 @app.get("/")
@@ -84,6 +96,7 @@ def ask():
         "question": question,
         "answer": answer
     }
+
 @app.post("/analyze")
 def analyze_documentation(request: AnalyzeRequest):
 
@@ -99,7 +112,13 @@ def analyze_documentation(request: AnalyzeRequest):
 
     recommended_sdks = recommend_sdk(provider)
 
-    filename = f"backend/generated_wrappers/{provider.lower()}_wrapper.py"
+    # Create folder automatically if missing
+    os.makedirs("generated_wrappers", exist_ok=True)
+
+    filename = (
+        f"generated_wrappers/"
+        f"{provider.lower()}_wrapper.py"
+    )
 
     wrapper_code = "Wrapper generation unavailable."
 
@@ -109,8 +128,8 @@ def analyze_documentation(request: AnalyzeRequest):
             auth_type,
             endpoints
         )
-    except Exception:
-        pass
+    except Exception as e:
+        print("Wrapper Generation Error:", e)
 
     with open(filename, "w", encoding="utf-8") as file:
         file.write(wrapper_code)
@@ -123,10 +142,9 @@ def analyze_documentation(request: AnalyzeRequest):
             endpoints,
             request.use_case
         )
-    except Exception:
-        pass
+    except Exception as e:
+        print("Recommendation Error:", e)
 
-    # RAG Storage
     chunks = create_chunks(cleaned_text)
 
     store_chunks(chunks)
@@ -141,13 +159,20 @@ def analyze_documentation(request: AnalyzeRequest):
         "wrapper_file": f"{provider.lower()}_wrapper.py",
         "download_url": f"/download-wrapper/{provider.lower()}"
     }
+
+
 @app.get("/download-wrapper/{provider}")
 def download_wrapper(provider: str):
 
     filename = (
-        f"backend/generated_wrappers/"
+        f"generated_wrappers/"
         f"{provider.lower()}_wrapper.py"
     )
+
+    if not os.path.exists(filename):
+        return {
+            "error": "Wrapper file not found"
+        }
 
     return FileResponse(
         path=filename,
