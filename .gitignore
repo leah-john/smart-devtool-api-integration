@@ -24,3 +24,7 @@ backend/app/rag/chroma_db/
 
 # Generated wrappers
 backend/generated_wrappers/*.py
+
+backend/backend/
+backend/**/chroma_db/
+*.sqlite3
