@@ -111,7 +111,7 @@ def analyze_documentation(request: AnalyzeRequest):
 
     print("\n===== AUTH =====")
     print(detect_authentication(cleaned_text))
-    
+
     endpoints = extract_endpoints(cleaned_text)
 
     auth_type = detect_authentication(cleaned_text)
@@ -148,7 +148,8 @@ def analyze_documentation(request: AnalyzeRequest):
         recommendations = generate_recommendations(
             auth_type,
             endpoints,
-            request.use_case
+            request.use_case,
+            cleaned_text[:3000]
         )
     except Exception as e:
         print("Recommendation Error:", e)
