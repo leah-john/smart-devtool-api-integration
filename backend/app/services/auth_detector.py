@@ -10,14 +10,18 @@ def detect_authentication(text):
         return "OAuth 2.0"
 
     elif (
-        "api-key" in text
+        "api key" in text
+        or "api-key" in text
         or "x-api-key" in text
         or "api_key" in text
     ):
         return "API Key"
 
-    elif "jwt" in text:
-        return "JWT"
+    elif (
+        "bearer" in text
+        or "jwt" in text
+    ):
+        return "JWT / Bearer Token"
 
     elif "basic auth" in text:
         return "Basic Authentication"

@@ -103,7 +103,15 @@ def analyze_documentation(request: AnalyzeRequest):
     raw_text = crawl_documentation(request.url)
 
     cleaned_text = clean_text(raw_text)
+    print("\n===== CLEANED TEXT SAMPLE =====")
+    print(cleaned_text[:3000])
 
+    print("\n===== ENDPOINTS =====")
+    print(extract_endpoints(cleaned_text))
+
+    print("\n===== AUTH =====")
+    print(detect_authentication(cleaned_text))
+    
     endpoints = extract_endpoints(cleaned_text)
 
     auth_type = detect_authentication(cleaned_text)

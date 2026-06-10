@@ -12,8 +12,10 @@ def crawl_documentation(url):
         soup = BeautifulSoup(response.text, "html.parser")
 
         text = soup.get_text(separator="\n", strip=True)
-
+        print("\n===== SCRAPED TEXT =====")
+        print(text[:1000])
         return text[:3000]
-
+        
     except Exception as e:
         return f"Error: {str(e)}"
+    
