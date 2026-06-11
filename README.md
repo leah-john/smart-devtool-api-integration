@@ -198,9 +198,20 @@ smart-devtool-api-integration/
 │   └── package.json
 │
 ├── docs/
+    └── screenshots
 └── README.md
 ```
+---
 
+## Google Colab Demonstration
+
+A demonstration notebook is included for project presentation and evaluation.
+
+Location:
+
+```text
+notebooks/Smart_DevTool_Demo.ipynb
+```
 ---
 
 ## Setup Instructions
@@ -332,6 +343,26 @@ class PayPalWrapper:
 
 ---
 
+## Demo Screenshots
+
+### PayPal Analysis
+
+![PayPal Analysis](docs/screenshots/paypal.png)
+
+### Stripe Analysis
+
+![Stripe Analysis](docs/screenshots/stripe.png)
+
+### GitHub Analysis
+
+![GitHub Analysis](docs/screenshots/github.png)
+
+### Razorpay Analysis
+
+![Razorpay Analysis](docs/screenshots/razorpay.png)
+
+---
+
 ## Future Improvements
 
 * OpenAPI/Swagger parsing
@@ -348,15 +379,19 @@ class PayPalWrapper:
 
 AI-powered recommendations and wrapper generation rely on the Google Gemini API.
 
-If Gemini free-tier quota limits are exceeded, the system will continue to:
+When Gemini free-tier quota limits are exceeded, the system will continue to perform:
 
-- Crawl documentation
-- Detect providers
-- Detect authentication methods
-- Extract endpoints
-- Recommend SDKs
+* Documentation crawling
+* Provider detection
+* Authentication detection
+* Endpoint extraction
+* SDK recommendation
 
-However AI recommendations and wrapper generation may be temporarily unavailable until quota resets.
+However, AI-generated recommendations and wrapper generation may be temporarily unavailable until the quota resets.
+
+The application remains functional for documentation analysis even during quota exhaustion.
+
+---
 
 ## Contributors
 
