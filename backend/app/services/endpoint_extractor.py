@@ -16,6 +16,8 @@ def extract_endpoints(text):
         return list(set(endpoints))
 
     resource_keywords = [
+
+        # Stripe
         "Customers",
         "Charges",
         "Refunds",
@@ -23,13 +25,43 @@ def extract_endpoints(text):
         "Checkout Sessions",
         "Subscriptions",
         "Invoices",
-        "Products"
+        "Products",
+
+        # GitHub
+        "Repositories",
+        "Issues",
+        "Pull Requests",
+        "Actions",
+        "Workflows",
+        "Organizations",
+        "Users",
+        "Commits",
+        "Branches",
+        "Webhooks",
+
+        # PayPal
+        "Orders",
+        "Payments",
+        "Payouts",
+        "Disputes",
+        "Invoicing",
+        "Subscriptions",
+
+        # Razorpay
+        "Payment Links",
+        "QR Codes",
+        "Settlements",
+        "Customers",
+        "Refunds",
+        "Invoices",
+        "Orders",
+        "Payouts"
     ]
 
-    found = []
+    found = set()
 
     for resource in resource_keywords:
         if resource.lower() in text.lower():
-            found.append(resource)
+            found.add(resource)
 
-    return found
+    return list(found)

@@ -344,6 +344,20 @@ class PayPalWrapper:
 
 ---
 
+## Known Limitations
+
+AI-powered recommendations and wrapper generation rely on the Google Gemini API.
+
+If Gemini free-tier quota limits are exceeded, the system will continue to:
+
+- Crawl documentation
+- Detect providers
+- Detect authentication methods
+- Extract endpoints
+- Recommend SDKs
+
+However AI recommendations and wrapper generation may be temporarily unavailable until quota resets.
+
 ## Contributors
 
 Leah John
